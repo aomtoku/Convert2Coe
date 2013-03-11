@@ -1,19 +1,19 @@
 #include<stdio.h>
 #include<string.h>
-#include<ftcl.h>
+//#include<ftcl.h>
+#include<stdlib.h>
 
-FILE fi, fo,fp;
+FILE *fi, *fo,*fp;
 unsigned char data;
 
 
-int main(int argc, char* argv)
+int main(int argc, char** argv)
 {
     if(argc < 1){
 	printf("ERROR: USAGE: COMMAND <input file> <output file(*.coe)>\n\n");
 	exit(1);
     }
 
-    FILE fi,fo;
     if((fi = fopen(argv[1],"rb")) == NULL){
 	fprintf(stderr,"ERROR: cannot open input file\n\n");
 	exit(1);
@@ -24,7 +24,7 @@ int main(int argc, char* argv)
 	exit(1);
     }
 
-    if((fp = open("./header.txt","rb")) == NULL){
+    if((fp = fopen("./header.txt","rb")) == NULL){
 	fprintf(stderr,"ERROR: cannot find header file\n\n");
 	exit(1);
     }
@@ -36,18 +36,17 @@ int main(int argc, char* argv)
 	}
     }
 
+    fclose(fp);
+
     while(fread(&data,sizeof(unsigned char),1,fi) == 1){
 
-	if();
-
 	if(fwrite(&data,sizeof(unsigned char),1,fo)!=1){
-	    fprinf(stderr,"ERROR: cannot write the data to output file\n\n");
+	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
 	    exit(1);
 	}
 
-	if(fwrite(",\n",sizeof(unsined char),3,fo)!= 1){
-	    fprintf(stderr,"ERROR: for DEBUG\n\n");
-	}
+	fputs(",\n",fo);
+	
     }
 
 
