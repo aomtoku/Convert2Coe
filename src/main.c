@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 	exit(1);
     }
 
-    if((fp = fopen("./header.txt","rb")) == NULL){
+    if((fp = fopen("/Users/toku1938/Work/Convert2Coe/src/header.txt","rb")) == NULL){
 	fprintf(stderr,"ERROR: cannot find header file\n\n");
 	exit(1);
     }

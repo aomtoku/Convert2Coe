@@ -4,13 +4,14 @@ CC = gcc
 SRC = main.c
 OBJS = main.o
 TARGET = convert2coe
-OUTPUT = ../../bin/
+OUTPUT = ../bin/
+
 
 .PHONY: all
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) -o $(TARGET) $(OBJS)
+	$(CC) -o $(OUTPUT)$(TARGET) $(OBJS)
 
 main.o: $(SRC)
 		$(CC) -c $(SRC)
