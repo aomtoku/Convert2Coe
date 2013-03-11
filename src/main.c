@@ -5,6 +5,7 @@
 
 FILE *fi, *fo,*fp;
 unsigned char data;
+unsigned char buf[256];
 
 
 int main(int argc, char** argv)
@@ -28,8 +29,26 @@ int main(int argc, char** argv)
 	fprintf(stderr,"ERROR: cannot find header file\n\n");
 	exit(1);
     }
+    int num,i,index;
+    char *p;
+    char foo[] = "\n";
+    unsigned char buffer[256];
+    //buffer = (char )malloc(256);
+    index = 0; i=0;num=0;
+
+    while(i= fread(buf,sizeof(unsigned char),1,fi) != 0){
+	//if(index==3)break;
+	p = buf;
+	do{
+	    printf("%02x", *p & 0xff);
+	    if(memcmp(p,foo,1)==0) index++;
+	    *p++;
+	} while(--i);
+	if(index==3)break;
+    }
 
     while(fread(&data,sizeof(unsigned char),1,fp) == 1){
+
 	if(fwrite(&data,sizeof(unsigned char),1,fo) != 1){
 	    fprintf(stderr,"ERROR: cannot write header file to output file\n\n");
 	    exit(1);
@@ -40,6 +59,7 @@ int main(int argc, char** argv)
 
     while(fread(&data,sizeof(unsigned char),1,fi) == 1){
 
+	//getc(fi)
 	if(fwrite(&data,sizeof(unsigned char),1,fo)!=1){
 	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
 	    exit(1);
