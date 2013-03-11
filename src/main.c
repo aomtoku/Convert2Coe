@@ -10,6 +10,15 @@ unsigned char buf[256];
 
 int main(int argc, char** argv)
 {
+    /* local valiable */
+    int i,index;
+    char *p,foo[]="\n";
+
+    /* Initialize */
+    index = 0;
+    i = 0;
+    
+    /* Initialize with Error Check */
     if(argc < 1){
 	printf("ERROR: USAGE: COMMAND <input file> <output file(*.coe)>\n\n");
 	exit(1);
@@ -29,15 +38,9 @@ int main(int argc, char** argv)
 	fprintf(stderr,"ERROR: cannot find header file\n\n");
 	exit(1);
     }
-    int num,i,index;
-    char *p;
-    char foo[] = "\n";
-    unsigned char buffer[256];
-    //buffer = (char )malloc(256);
-    index = 0; i=0;num=0;
 
+    /* header file reading */
     while(i= fread(buf,sizeof(unsigned char),1,fi) != 0){
-	//if(index==3)break;
 	p = buf;
 	do{
 	    printf("%02x", *p & 0xff);
@@ -46,7 +49,8 @@ int main(int argc, char** argv)
 	} while(--i);
 	if(index==3)break;
     }
-
+    
+    /* corefile header */
     while(fread(&data,sizeof(unsigned char),1,fp) == 1){
 
 	if(fwrite(&data,sizeof(unsigned char),1,fo) != 1){
@@ -56,19 +60,16 @@ int main(int argc, char** argv)
     }
 
     fclose(fp);
-
+    
+    /* Make a file */
     while(fread(&data,sizeof(unsigned char),1,fi) == 1){
 
-	//getc(fi)
 	if(fwrite(&data,sizeof(unsigned char),1,fo)!=1){
 	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
 	    exit(1);
 	}
-
 	fputs(",\n",fo);
-	
     }
-
 
     fclose(fi);
     fclose(fo);
