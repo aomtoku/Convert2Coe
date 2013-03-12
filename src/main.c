@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<string.h>
-//#include<ftcl.h>
 #include<stdlib.h>
 
 FILE *fi, *fo,*fp;
@@ -63,13 +62,6 @@ int main(int argc, char** argv)
     
     /* Make a file */
     while(fread(&data,sizeof(unsigned char),1,fi) == 1){
-        /*char *number;
-	sprintf(number,"%c%s","+",data);
-	char *err;
-	long x = strtol(number,&err,16);
-	x = x * 0.75;
-	data = (int)x;
-	  */
 
 	if(fwrite(&data,sizeof(unsigned char),1,fo)!=1){
 	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
