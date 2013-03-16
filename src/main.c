@@ -2,10 +2,9 @@
 #include<string.h>
 #include<stdlib.h>
 
-FILE *fi, *fo,*fp;
+FILE *fi, *fo,*fp,*ft;
 unsigned char data;
 unsigned char buf[256];
-
 
 int main(int argc, char** argv)
 {
@@ -28,13 +27,13 @@ int main(int argc, char** argv)
 	exit(1);
     }
 
-    if((fo = fopen(argv[2],"wb")) == NULL){
-	fprintf(stderr,"ERROR: cannot open output file\n\n");
+    if((fp = fopen("/Users/toku1938/Work/Convert2Coe/src/header.txt","rb")) == NULL){
+	fprintf(stderr,"ERROR: cannot find header file\n\n");
 	exit(1);
     }
 
-    if((fp = fopen("/Users/toku1938/Work/Convert2Coe/src/header.txt","rb")) == NULL){
-	fprintf(stderr,"ERROR: cannot find header file\n\n");
+    if((ft = fopen("test.coe","wb")) == NULL){
+	fprintf(stderr,"ERROR: cannot open input file\n\n");
 	exit(1);
     }
 
@@ -52,7 +51,7 @@ int main(int argc, char** argv)
     /* corefile header */
     while(fread(&data,sizeof(unsigned char),1,fp) == 1){
 
-	if(fwrite(&data,sizeof(unsigned char),1,fo) != 1){
+	if(fwrite(&data,sizeof(unsigned char),1,ft) != 1){
 	    fprintf(stderr,"ERROR: cannot write header file to output file\n\n");
 	    exit(1);
 	}
@@ -62,19 +61,45 @@ int main(int argc, char** argv)
     
     /* Make a file */
     while(fread(&data,sizeof(unsigned char),1,fi) == 1){
+	 char a[4];
+	 sprintf(a,"%02x",data);
+	if(fwrite(&a,sizeof(char)*2,1,ft)!=1){
+	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
+	    exit(1);
+	}
+	fputs(",\n",ft);
+    }
 
+    fseek(ft,-6L,SEEK_END);
+    fputs(";\n",ft);
+    int loc = ftell(ft);
+
+    fclose(ft);
+
+    if((ft = fopen("test.coe","rb")) == NULL){
+	fprintf(stderr,"ERROR: cannot open output file\n\n");
+	exit(1);
+    }
+
+    if((fo = fopen(argv[2],"wb")) == NULL){
+	fprintf(stderr,"ERROR: cannot open output file\n\n");
+	exit(1);
+    }
+
+    while(fread(&data,sizeof(unsigned char),1,ft) == 1){
+	int loc_t;
+	 
 	if(fwrite(&data,sizeof(unsigned char),1,fo)!=1){
 	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
 	    exit(1);
 	}
-	fputs(",\n",fo);
+	if((loc_t=ftell(fo)) == loc) break;
     }
 
-    fseek(fo,-3L,SEEK_END);
-    fputs(";\n",fo);
 
     fclose(fi);
+    fclose(ft);
+    remove("test.coe");
     fclose(fo);
-
     return 0;
 }
