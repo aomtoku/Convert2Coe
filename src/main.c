@@ -58,19 +58,23 @@ int main(int argc, char** argv)
     }
 
     fclose(fp);
-    
     /* Make a file */
-    while(fread(&data,sizeof(unsigned char),1,fi) == 1){
-	 char a[4];
-	 sprintf(a,"%02x",data);
-	if(fwrite(&a,sizeof(char)*2,1,ft)!=1){
+    unsigned char data1[3];
+    while(fread(&data1,sizeof(unsigned char),3,fi)==3){
+	char a[6];
+	int t,len;
+	//sprintf(a,"%x%x", data1[0]/16 | data1[1]/16 << 4,data1[2]/16);
+	sprintf(a,"%x%x%x", data1[0]/16,data1[1]/16,data1[2]/16);
+	len = strlen(a);
+	if((t=fwrite(&a,sizeof(char),len,ft))!=len){
 	    fprintf(stderr,"ERROR: cannot write the data to output file\n\n");
+	    printf("fwrite returns %d\n",t);
 	    exit(1);
 	}
 	fputs(",\n",ft);
     }
 
-    fseek(ft,-6L,SEEK_END);
+    fseek(ft,-2L,SEEK_END);
     fputs(";\n",ft);
     int loc = ftell(ft);
 
